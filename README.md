@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://huggingface.co/datasets/your-org/nl2sql-patent-paper-100">
+  <a href="https://huggingface.co/datasets/KyrieSun/nl2sql-patent-paper-100">
     <img src="https://img.shields.io/badge/🤗_Dataset-Hugging_Face-yellow" alt="Hugging Face Dataset">
   </a>
   <a href="LICENSE">
@@ -49,11 +49,10 @@
 | 统计项 | 数值 |
 |--------|------|
 | 总样本数 | 100 |
-| 专利检索 | ~70% |
-| 论文检索 | ~20% |
-| 混合查询 | ~10% |
-| 平均 query 长度 | 35 字符 |
-| 平均 nl2sql 长度 | 80 字符 |
+| 专利检索 | ~92% |
+| 论文检索 | ~8% |
+| 平均 query 长度 | 47 字符 |
+| 平均 nl2sql 长度 | 110 字符 |
 
 ---
 
@@ -71,7 +70,7 @@ pip install datasets pandas
 from datasets import load_dataset
 
 # 加载数据集
-dataset = load_dataset("your-org/nl2sql-patent-paper-100")
+dataset = load_dataset("KyrieSun/nl2sql-patent-paper-100")
 
 # 查看第一条数据
 sample = dataset["train"][0]
@@ -83,7 +82,7 @@ print(f"NL2SQL: {sample['nl2sql_zh']}")
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-org/nl2sql-patent-paper-100.git
+git clone https://github.com/KyrieSun/nl2sql-patent-paper-100.git
 cd nl2sql-patent-paper-100
 
 # Python 加载
@@ -110,7 +109,7 @@ EOF
 │   ├── nl2sql_sample_100.jsonl    # 主数据文件 (JSONL)
 │   └── nl2sql_sample_100.csv      # CSV 格式备份
 ├── README.md                       # 本文件
-├── DATASET_CARD.md                 # Hugging Face Dataset Card
+├── load_data.py                    # 数据加载脚本
 └── LICENSE                         # CC BY 4.0 许可证
 ```
 
@@ -178,7 +177,6 @@ paper|org_name:谷歌 AND reference_count:50
 
 ```python
 import json
-import re
 
 # 解析 nl2sql 表达式
 def parse_nl2sql(nl2sql_str):
@@ -191,6 +189,7 @@ def parse_nl2sql(nl2sql_str):
     cond_dict = {}
     
     for cond in conditions.split(' AND '):
+        cond = cond.strip()
         if ':' in cond:
             key, value = cond.split(':', 1)
             cond_dict[key.strip()] = value.strip()
@@ -248,7 +247,7 @@ print(json.dumps(parsed, indent=2, ensure_ascii=False))
 | T5-base | -- | -- | -- |
 | ChatGPT-3.5 | -- | -- | -- |
 
-> 欢迎提交你的实验结果！请参考 [CONTRIBUTING.md](CONTRIBUTING.md)。
+> 欢迎提交你的实验结果！
 
 ---
 
@@ -262,6 +261,24 @@ print(json.dumps(parsed, indent=2, ensure_ascii=False))
 
 ---
 
+## 📊 数据来源
+
+- **数据类型**：专利和论文检索场景的模拟查询数据
+- **构建方式**：基于检索场景需求人工设计并标注
+- **采集时间**：2024年
+- **数据版本**：v1.0.0-sample
+
+### 构建流程
+
+1. **需求分析**：分析专利/论文检索系统的典型查询场景和需求
+2. **场景设计**：设计覆盖多种检索条件的查询场景
+3. **范式定义**：定义查询范式（query_paradigm）描述查询结构
+4. **人工编写**：专业标注员编写自然语言查询和对应的结构化表达式
+5. **质量审核**：资深审核员检查语法和语义正确性
+6. **翻译校对**：专业译者进行中英互译
+
+---
+
 ## 🤝 贡献指南
 
 我们欢迎社区贡献！你可以：
@@ -270,8 +287,6 @@ print(json.dumps(parsed, indent=2, ensure_ascii=False))
 2. **提交 PR**: 改进数据处理脚本或文档
 3. **分享结果**: 提交你的基准测试结果
 4. **扩展数据**: 贡献更多标注样本
-
-请参考 [CONTRIBUTING.md](CONTRIBUTING.md) 了解详情。
 
 ---
 
@@ -289,12 +304,12 @@ print(json.dumps(parsed, indent=2, ensure_ascii=False))
 
 ```bibtex
 @dataset{nl2sql_patent_paper_2024,
-  author = {Your Data Team},
+  author = {KyrieSun},
   title = {NL2SQL-Patent-Paper-100: A Chinese NL2SQL Dataset for Patent and Paper Retrieval},
   year = {2024},
   publisher = {Hugging Face},
   version = {1.0.0},
-  url = {https://huggingface.co/datasets/your-org/nl2sql-patent-paper-100}
+  url = {https://huggingface.co/datasets/KyrieSun/nl2sql-patent-paper-100}
 }
 ```
 
@@ -302,9 +317,9 @@ print(json.dumps(parsed, indent=2, ensure_ascii=False))
 
 ## 📞 联系我们
 
-- 📧 **邮箱**: data-team@your-org.com
-- 🐛 **Issue**: [GitHub Issues](https://github.com/your-org/nl2sql-patent-paper-100/issues)
-- 🤗 **Hugging Face**: [@your-org](https://huggingface.co/your-org)
+- 📧 **邮箱**: 通过 GitHub Issues 联系
+- 🐛 **Issue**: [GitHub Issues](../../issues)
+- 🤗 **Hugging Face**: [@KyrieSun](https://huggingface.co/KyrieSun)
 
 ---
 
